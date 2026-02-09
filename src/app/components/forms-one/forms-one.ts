@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-forms-one',
@@ -8,7 +8,6 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
   styleUrl: './forms-one.scss',
 })
 export class FormsOne {
-
   // profileForm = new FormGroup({
   //   name: new FormControl("pippo"),
   //   surname: new FormControl("de pippis"),
@@ -22,15 +21,30 @@ export class FormsOne {
 
   profileForm = this.fb.group({
     name: ['paperone', Validators.required],
-    surname: ['de paperis', Validators.required],
+    surname: ['de paperis', Validators.maxLength(4)],
     adress: this.fb.group({
       city: ['paperopoli'],
       street: ['via delle oche'],
-      number: [12]
-    })
+      number: [12, [Validators.required, Validators.min(1)]]
+    }),
+
+    aliases: this.fb.array([
+      this.fb.control('')
+    ])
   })
 
   submit(){
-    console.log(this.profileForm.value);
+    console.log(this.profileForm);
+  }
+
+  getAliases(){
+    return this.profileForm.get('aliases') as FormArray;
+  }
+  addAlias() {
+    this.getAliases().push(this.fb.control(''));
+  }
+
+  removeAlias(inbex: number) {
+    this.getAliases().removeAt(inbex);
   }
 }

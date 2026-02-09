@@ -23,5 +23,17 @@
             <input type="number" id="number" formControlName="number">
         </div>
     </div>
-    <button type="submit">Invia</button>
+
+    <div formArrayName="aliases">
+        <h3>Aliases</h3>
+        <button (click)="addAlias()">+</button>
+        @for (alias of getAliases().controls; track $index; let i = $index) {
+        <div>
+            <label for="aliases-{{i}}">alias: </label>
+            <input type="text" id="aliases-{{i}}" [formControlName]="i">
+            <button (click)="removeAlias(i)">-</button>
+        </div>
+        }
+    </div>
+    <button type="submit" [disabled]="profileForm.invalid">Invia</button>
 </form>
